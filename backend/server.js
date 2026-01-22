@@ -7,10 +7,8 @@ const PORT = process.env.PORT || 3000;
 
 const app = express();
 
-import cors from 'cors';
-
 app.use(cors({
-  origin: '*', // aman untuk skripsi
+  origin: '*',
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
 }));
 app.use(express.json());
