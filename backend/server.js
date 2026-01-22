@@ -7,7 +7,12 @@ const PORT = process.env.PORT || 3000;
 
 const app = express();
 
-app.use(cors());
+import cors from 'cors';
+
+app.use(cors({
+  origin: '*', // aman untuk skripsi
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+}));
 app.use(express.json());
 app.use('/uploads', express.static('uploads'));
 
