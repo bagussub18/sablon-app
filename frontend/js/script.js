@@ -1,3 +1,7 @@
+// fetch('http://localhost:3000/api/register')
+// fetch('http://localhost:3000/api/login')
+// fetch('http://localhost:3000/api/pesanan')
+
 const user = JSON.parse(localStorage.getItem('user'));
 let currentOwnerStatus = 'pending';
 
@@ -43,7 +47,7 @@ document.getElementById('btnLogin')?.addEventListener('click', async (e) => {
     const password = document.getElementById('password').value;
 
     try {
-      const res = await fetch('http://localhost:3000/api/login', {
+      const res = await fetch('https://sablon-app-production.up.railway.app/api/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password })
@@ -88,7 +92,7 @@ document.getElementById('btnDaftar')?.addEventListener('click', async (e) => {
   const password = document.getElementById('password').value;
   const confirm_password = document.getElementById('confirm_password').value;
 
-  const res = await fetch('http://localhost:3000/api/register', {
+  const res = await fetch('https://sablon-app-production.up.railway.app/api/register', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ nama, email, password, confirm_password })
@@ -131,7 +135,7 @@ document.getElementById('btnPesan')?.addEventListener('click', async (e) => {
   formData.append('desain', document.getElementById('desain').files[0]);
   formData.append('bukti_pembayaran', document.getElementById('bukti').files[0]);
 
-  const res = await fetch('http://localhost:3000/api/pesanan', {
+  const res = await fetch('https://sablon-app-production.up.railway.app/api/pesanan', {
     method: 'POST',
     body: formData
   });
@@ -153,7 +157,7 @@ async function loadPesanan(status = currentPelangganStatus) {
   if (!user) return;
 
   const res = await fetch(
-    `http://localhost:3000/api/pesanan/user/${user.id}?status=${status}&page=${pelangganPage}&limit=${pelangganLimit}`
+    `https://sablon-app-production.up.railway.app/api/pesanan/user/${user.id}?status=${status}&page=${pelangganPage}&limit=${pelangganLimit}`
   );
 
   const result = await res.json();
@@ -231,7 +235,7 @@ function filterPelangganStatus(status) {
 async function loadPesananOwner(status = '') {
   currentOwnerStatus = status;
 
-  let url = `http://localhost:3000/api/pesanan?page=${ownerPage}`;
+  let url = `https://sablon-app-production.up.railway.app/api/pesanan?page=${ownerPage}`;
   if (status) url += `&status=${status}`;
 
   const res = await fetch(url);
@@ -331,7 +335,7 @@ function filterOwnerStatus(status) {
 
 
 async function updateStatus(id, status) {
-  const res = await fetch(`http://localhost:3000/api/pesanan/${id}/status`, {
+  const res = await fetch(`https://sablon-app-production.up.railway.app/api/pesanan/${id}/status`, {
     method: 'PUT',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ status })
