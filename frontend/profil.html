@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Robby Sablon</title>
+    <link rel="shortcut icon" href="icons/logo-sablon.png" type="image/x-icon">
+    <link rel="stylesheet" href="css\style.css">
+    <link rel="manifest" href="manifest.json">
+</head>
+<body>
+    <header>
+        <div class="logo"><a href="index.html"><img src="resources/logo-transparent.png" alt=""></a></div>
+        <nav>
+            <ul>
+                <li><a href="profil.html" id="userDashboard">Dashboard</a></li>
+            </ul>
+        </div>
+    </header>
+    <main>
+        <div class="container-profil">
+        <section class="profilku">
+            <div class="cont-profilku">
+            <img src="resources/akun.jpg" alt="">
+            <h3>Profil Akun</h3>
+            <p>Nama: <span id="profilNama"></span></p>
+            <p>Email: <span id="profilEmail"></span></p>
+            <p>Role: <span id="profilRole"></span></p>
+            </div>
+            <div class="bottom-profil">
+                <button id="btnLogout">Logout</button>
+                <a href="pesan.html" id="pesanSablon">Pesan Sekarang</a>
+            </div>
+        </section>
+        <section class="transaksi">
+            <article class="cont-transaksi">
+                <section id="pelangganSection" class="pesanan" style="display:none">
+                    <section class="nav">
+                    <button onclick="filterPelangganStatus('pending')">Pending</button>
+                    <button onclick="filterPelangganStatus('diproses')">Proses</button>
+                    <button onclick="filterPelangganStatus('selesai')">Selesai</button>
+                    <button onclick="filterPelangganStatus('batal')">Batal</button>
+                </section>
+                <div class="cont-table">
+                    <table border="1">
+                        <thead>
+                            <tr>
+                            <th>Nama</th>
+                            <th>Alamat</th>
+                            <th>Nomor HP</th>
+                            <th>Barang</th>
+                            <th>Desain</th>
+                            <th>Bukti Pembayaran</th>
+                            <th>Total</th>
+                            <th>Tanggal Pesan</th>
+                            <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="pesananTable"></tbody>
+                    </table>
+                </div>
+                <div class="pagination">
+                <button onclick="prevPelanggan()">Prev</button>
+                <span id="pageInfoPelanggan"></span>
+                <button onclick="nextPelanggan()">Next</button>
+                </div>
+                </section>
+                <section id="ownerSection" style="display:none">
+                    <section class="nav">
+                        <button onclick="filterOwnerStatus('pending')">Pending</button>
+                        <button onclick="filterOwnerStatus('diproses')">Diproses</button>
+                        <button onclick="filterOwnerStatus('selesai')">Selesai</button>
+                        <button onclick="filterOwnerStatus('batal')">Batal</button>
+                    </section>
+                    <div class="cont-table">
+                    <table border="1">
+                    <thead>
+                        <tr>
+                            <th>Pelanggan</th>
+                            <th>Alamat</th>
+                            <th>Nomor HP</th>
+                            <th>Barang</th>
+                            <th>Desain</th>
+                            <th>Bukti Pembayaran</th>
+                            <th>Total</th>
+                            <th>Tanggal Pesan</th>
+                            <th>Status</th>
+                            <th>Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody id="ownerTable"></tbody>
+                    </table>
+                    </div>
+                    <div class="pagination">
+                    <button onclick="prevPageOwner()">Prev</button>
+                    <span id="pageInfoOwner"></span>
+                    <button onclick="nextPageOwner()">Next</button>
+                    </div>
+                </section>
+            </article>
+        </section>
+        </div>
+    </main>
+    <footer>
+        <div class="cont-footer">
+            <div class="bottom-img">
+            <img src="resources/logo-transparent.png" alt="">
+        </div>
+        <div class="cont-bottom">
+            <div class="profil-bottom"> 
+                <h3>Robby Sablon</h3>
+                <p>Jasa percetakan sabon, Robby Sablon melayani cetak sablon manual berbagai macam produk seperti 
+                    Souvenir, Label pita, Stiker, Thumbler, Payung, Gelas, Plastik, Stopmap, dll.</p>
+            </div>
+            <div class="kontak">
+                <h3>Hubungi Kami</h3>
+                <p>+62 818 026 858 44</p>
+                <p>robbysablon@gmail.com</p>
+                <p>robby.sablon</p>
+            </div>
+            <div class="alamat">
+                <h3>Alamat</h3>
+                <p>Tempel Wirogunan No.891, Yogyakarta</p>
+            </div>
+        </div>
+        <p id="cpr">Robby Sablon 2026. All Rights Reserved</p>
+        </div>
+    </footer>
+    <div class="chat">
+            <a href="https://api.whatsapp.com/send?phone=6281802685844" target="_blank">
+                <img src="resources/wa.png" alt="whatsapp.png">
+            </a>
+        </div>
+    </footer>
+    <script src="js/script.js"></script>
+    <script src="js/sw-register.js"></script>
+</body>
+</html>

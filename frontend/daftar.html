@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Robby Sablon</title>
+    <link rel="shortcut icon" href="icons/logo-sablon.png" type="image/x-icon">
+    <link rel="stylesheet" href="css\style.css">
+    <link rel="manifest" href="manifest.json">
+</head>
+<body>
+    <header>
+        <div class="logo"><a href="index.html"><img src="resources/logo-transparent.png" alt=""></a></div>
+        <nav>
+            <ul>
+                <li><a href="profil.html" id="userDashboard">Dashboard</a></li>
+            </ul>
+        </div>
+    </header>
+    <div class="container">
+    <form class="daf" id="registerForm">
+        <div class="top-cont reg">
+        <h1>Daftar Akun Baru</h1>
+        </div>
+        <div class="cont-form">
+            <label for="nama">Nama</label>
+            <input type="text" name="nama" id="nama">
+        </div>
+        <div class="cont-form">
+            <label for="email">Email</label>
+            <input type="email" name="email" id="email">
+        </div>
+        <div class="cont-form">
+            <label for="password">Password</label>
+            <input type="password" name="password" id="password">
+        </div>
+        <div class="cont-form">
+            <label for="confirm_password">Confirm Password</label>
+            <input type="password" name="confirm_password" id="confirm_password">
+        </div>
+        <span>sudah punya akun? silahkan <a href="login.html">masuk</a></span>
+        <div class="cont-form">
+            <button id="btnDaftar" type="button" class="btn-login">Daftar</button>
+        </div>
+    </form>
+    </div>
+    <footer>
+        <div class="cont-footer">
+            <div class="bottom-img">
+            <img src="resources/logo-transparent.png" alt="">
+        </div>
+        <div class="cont-bottom">
+            <div class="profil-bottom"> 
+                <h3>Robby Sablon</h3>
+                <p>Jasa percetakan sabon, Robby Sablon melayani cetak sablon manual berbagai macam produk seperti 
+                    Souvenir, Label pita, Stiker, Thumbler, Payung, Gelas, Plastik, Stopmap, dll.</p>
+            </div>
+            <div class="kontak">
+                <h3>Hubungi Kami</h3>
+                <p>+62 818 026 858 44</p>
+                <p>robbysablon@gmail.com</p>
+                <p>robby.sablon</p>
+            </div>
+            <div class="alamat">
+                <h3>Alamat</h3>
+                <p>Tempel Wirogunan No.891, Yogyakarta</p>
+            </div>
+        </div>
+        <p id="cpr">Robby Sablon 2026. All Rights Reserved</p>
+        </div>
+    </footer>
+    <script src="js/script.js"></script>
+    <script src="js/sw-register.js"></script>
+</body>
+</html>
