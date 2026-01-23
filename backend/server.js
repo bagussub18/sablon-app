@@ -12,7 +12,7 @@ app.use(cors({
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
 }));
 app.use(express.json());
-app.use('/uploads', express.static('uploads'));
+// app.use('/uploads', express.static('uploads'));
 
 // PWA
 app.use(express.static(path.join(__dirname, '../frontend')));
