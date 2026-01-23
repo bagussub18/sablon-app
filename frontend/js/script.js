@@ -282,12 +282,12 @@ async function loadPesananOwner(status = '') {
         <td><a href="https://wa.me/${p.no_hp}?text=Halo%20${p.nama_penerima}%2C%20Kami%20dari%20Robby%20Sablon.%0ATerima%20Kasih%20sudah%20mempercayakan%20produk%20anda%20kepada%20kami.%0APesanan%20anda%3A%20Barang%3A%20${p.jenis_barang}%0AStatus%3A%20${p.status}" target="_blank">${p.no_hp}</td>
         <td>${p.jenis_barang}</td>
         <td>
-          <a href="${p.desain}" target="_blank">Desain</a>
-          <a href="${p.desain}" download=${p.nama_pelanggan}>Download</a>
+          <a href=${p.desain} target="_blank">Desain</a>
+          <a href=${p.desain} download=${p.nama_pelanggan}>Download</a>
         </td>
         <td>
-          <a href="${p.bukti_pembayaran}" target="_blank">Bukti</a>
-          <a href="${p.bukti_pembayaran}" download=${p.nama_pelanggan}>Download</a>
+          <a href=${p.bukti_pembayaran} target="_blank">Bukti</a>
+          <a href=${p.bukti_pembayaran} download=${p.nama_pelanggan}>Download</a>
         </td>
         <td>Rp ${p.total_harga}</td>
         <td>${new Date(p.created_at).toLocaleString('id-ID')}</td>
