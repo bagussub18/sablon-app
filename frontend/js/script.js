@@ -1,6 +1,7 @@
-// fetch('http://localhost:3000/api/register')
-// fetch('http://localhost:3000/api/login')
-// fetch('http://localhost:3000/api/pesanan')
+const API_BASE_URL =
+  window.location.hostname === 'localhost'
+    ? 'http://localhost:3000/api'
+    : 'https://sablon-app-production.up.railway.app/api';
 
 const user = JSON.parse(localStorage.getItem('user'));
 let currentOwnerStatus = 'pending';
@@ -47,7 +48,7 @@ document.getElementById('btnLogin')?.addEventListener('click', async (e) => {
     const password = document.getElementById('password').value;
 
     try {
-      const res = await fetch('https://sablon-app-production.up.railway.app/api/login', {
+      const res = await fetch(`${API_BASE_URL}/api/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password })
@@ -92,7 +93,7 @@ document.getElementById('btnDaftar')?.addEventListener('click', async (e) => {
   const password = document.getElementById('password').value;
   const confirm_password = document.getElementById('confirm_password').value;
 
-  const res = await fetch('https://sablon-app-production.up.railway.app/api/register', {
+  const res = await fetch(`${API_BASE_URL}/api/register`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ nama, email, password, confirm_password })
@@ -135,7 +136,7 @@ document.getElementById('btnPesan')?.addEventListener('click', async (e) => {
   formData.append('desain', document.getElementById('desain').files[0]);
   formData.append('bukti_pembayaran', document.getElementById('bukti').files[0]);
 
-  const res = await fetch('https://sablon-app-production.up.railway.app/api/pesanan', {
+  const res = await fetch(`${API_BASE_URL}/api/pesanan`, {
     method: 'POST',
     body: formData
   });
@@ -157,7 +158,7 @@ async function loadPesanan(status = currentPelangganStatus) {
   if (!user) return;
 
   const res = await fetch(
-    `https://sablon-app-production.up.railway.app/api/pesanan/user/${user.id}?status=${status}&page=${pelangganPage}&limit=${pelangganLimit}`
+    `${API_BASE_URL}/api/pesanan/user/${user.id}?status=${status}&page=${pelangganPage}&limit=${pelangganLimit}`
   );
 
   const result = await res.json();
@@ -237,7 +238,7 @@ function filterPelangganStatus(status) {
 async function loadPesananOwner(status = '') {
   currentOwnerStatus = status;
 
-  let url = `https://sablon-app-production.up.railway.app/api/pesanan?page=${ownerPage}`;
+  let url = `${API_BASE_URL}/api/pesanan?page=${ownerPage}`;
   if (status) url += `&status=${status}`;
 
   const res = await fetch(url);
@@ -281,12 +282,12 @@ async function loadPesananOwner(status = '') {
         <td><a href="https://wa.me/${p.no_hp}?text=Halo%20${p.nama_penerima}%2C%20Kami%20dari%20Robby%20Sablon.%0ATerima%20Kasih%20sudah%20mempercayakan%20produk%20anda%20kepada%20kami.%0APesanan%20anda%3A%20Barang%3A%20${p.jenis_barang}%0AStatus%3A%20${p.status}" target="_blank">${p.no_hp}</td>
         <td>${p.jenis_barang}</td>
         <td>
-          <a href="/uploads/desain/${p.desain}" target="_blank">Desain</a>
-          <a href="/uploads/desain/${p.desain}" download=${p.nama_pelanggan}>Download</a>
+          <a href="${p.desain}" target="_blank">Desain</a>
+          <a href="${p.desain}" download=${p.nama_pelanggan}>Download</a>
         </td>
         <td>
-          <a href="/uploads/bukti/${p.bukti_pembayaran}" target="_blank">Bukti</a>
-          <a href="/uploads/bukti/${p.bukti_pembayaran}" download=${p.nama_pelanggan}>Download</a>
+          <a href="${p.bukti_pembayaran}" target="_blank">Bukti</a>
+          <a href="${p.bukti_pembayaran}" download=${p.nama_pelanggan}>Download</a>
         </td>
         <td>Rp ${p.total_harga}</td>
         <td>${new Date(p.created_at).toLocaleString('id-ID')}</td>
@@ -337,7 +338,7 @@ function filterOwnerStatus(status) {
 
 
 async function updateStatus(id, status) {
-  const res = await fetch(`https://sablon-app-production.up.railway.app/api/pesanan/${id}/status`, {
+  const res = await fetch(`${API_BASE_URL}/api/pesanan/${id}/status`, {
     method: 'PUT',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ status })
