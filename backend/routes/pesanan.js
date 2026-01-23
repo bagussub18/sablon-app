@@ -7,62 +7,120 @@ const router = express.Router();
 // =======================
 // KONFIGURASI UPLOAD
 // =======================
-const path = require('path');
+// const path = require('path');
 
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    if (file.fieldname === 'desain') {
-      cb(null, path.join(__dirname, '../uploads/desain'));
-    } else {
-      cb(null, path.join(__dirname, '../uploads/bukti'));
-    }
-  },
-  filename: (req, file, cb) => {
-    cb(null, Date.now() + '-' + file.originalname);
-  }
-});
+// const storage = multer.diskStorage({
+//   destination: (req, file, cb) => {
+//     if (file.fieldname === 'desain') {
+//       cb(null, path.join(__dirname, '../uploads/desain'));
+//     } else {
+//       cb(null, path.join(__dirname, '../uploads/bukti'));
+//     }
+//   },
+//   filename: (req, file, cb) => {
+//     cb(null, Date.now() + '-' + file.originalname);
+//   }
+// });
 
 
-const upload = multer({ storage });
+// const upload = multer({ storage });
 
 // =======================
 // TAMBAH PESANAN (PELANGGAN)
 // =======================
+
+// router.post(
+//   '/pesanan',
+//   upload.fields([
+//     { name: 'desain', maxCount: 1 },
+//     { name: 'bukti_pembayaran', maxCount: 1 }
+//   ]),
+//   (req, res) => {
+//     const {
+//       id_user,
+//       nama_penerima,
+//       jenis_barang,
+//       alamat,
+//       no_hp,
+//       total_harga
+//     } = req.body;
+
+//     // localhost
+//     // const desain = req.files['desain'][0].filename;
+//     // const bukti = req.files['bukti_pembayaran'][0].filename;
+//     // cloudinary
+//     const desain = req.files.desain[0].path;
+//     const bukti = req.files.bukti_pembayaran[0].path;
+
+//     const sql = `
+//       INSERT INTO pesanan
+//       (id_user, nama_penerima, jenis_barang, desain, alamat, no_hp, bukti_pembayaran, total_harga, status)
+//       VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'pending')
+//     `;
+
+//     db.query(
+//       sql,
+//       [id_user, nama_penerima, jenis_barang, desain, alamat, no_hp, bukti, total_harga],
+//       (err) => {
+//         if (err) return res.status(500).json(err);
+//         res.json({ message: 'Pesanan berhasil dikirim' });
+//       }
+//     );
+//   }
+// );
+
+
+const cloudinary = require('../config/cloudinary');
+
+const upload = multer({ storage: multer.memoryStorage() });
+
 router.post(
   '/pesanan',
   upload.fields([
     { name: 'desain', maxCount: 1 },
     { name: 'bukti_pembayaran', maxCount: 1 }
   ]),
-  (req, res) => {
-    const {
-      id_user,
-      nama_penerima,
-      jenis_barang,
-      alamat,
-      no_hp,
-      total_harga
-    } = req.body;
+  async (req, res) => {
+    try {
+      const uploadImage = (file) =>
+        new Promise((resolve, reject) => {
+          cloudinary.uploader.upload_stream(
+            { folder: 'sablon' },
+            (err, result) => {
+              if (err) reject(err);
+              else resolve(result.secure_url);
+            }
+          ).end(file.buffer);
+        });
 
-    const desain = req.files['desain'][0].filename;
-    const bukti = req.files['bukti_pembayaran'][0].filename;
+      const desainUrl = await uploadImage(req.files.desain[0]);
+      const buktiUrl = await uploadImage(req.files.bukti_pembayaran[0]);
 
-    const sql = `
-      INSERT INTO pesanan
-      (id_user, nama_penerima, jenis_barang, desain, alamat, no_hp, bukti_pembayaran, total_harga, status)
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'pending')
-    `;
+      const data = {
+        id_user: req.body.id_user,
+        nama_penerima: req.body.nama_penerima,
+        jenis_barang: req.body.jenis_barang,
+        alamat: req.body.alamat,
+        no_hp: req.body.no_hp,
+        total_harga: req.body.total_harga,
+        desain: desainUrl,
+        bukti_pembayaran: buktiUrl,
+        status: 'pending'
+      };
 
-    db.query(
-      sql,
-      [id_user, nama_penerima, jenis_barang, desain, alamat, no_hp, bukti, total_harga],
-      (err) => {
+      db.query('INSERT INTO pesanan SET ?', data, (err) => {
         if (err) return res.status(500).json(err);
         res.json({ message: 'Pesanan berhasil dikirim' });
-      }
-    );
+      });
+
+    } catch (err) {
+      res.status(500).json({ message: 'Upload gagal', error: err });
+    }
   }
 );
+
+module.exports = router;
+
 
 // =======================
 // AMBIL PESANAN USER

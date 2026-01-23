@@ -187,10 +187,10 @@ function renderPesanan(data) {
         <td>${p.no_hp}</td>
         <td>${p.jenis_barang}</td>
         <td>
-          <a href="http://localhost:3000/uploads/desain/${p.desain}" target="_blank">Lihat</a>
+          <a href="${p.desain}" target="_blank">Lihat</a>
         </td>
         <td>
-          <a href="http://localhost:3000/uploads/bukti/${p.bukti_pembayaran}" target="_blank">Lihat</a>
+          <a href="${p.bukti_pembayaran}" target="_blank">Lihat</a>
         </td>
         <td>Rp ${p.total_harga}</td>
         <td>${new Date(p.created_at).toLocaleString('id-ID')}</td>
@@ -199,6 +199,8 @@ function renderPesanan(data) {
     `;
   });
 }
+
+/*<a href="http://localhost:3000/uploads/bukti/${p.bukti_pembayaran}" target="_blank">Lihat</a>*/
 
 //pagination Pelanggan
 let pelangganPage = 1;
