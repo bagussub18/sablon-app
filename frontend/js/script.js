@@ -1,7 +1,4 @@
-const API_BASE_URL =
-  window.location.hostname === 'localhost'
-    ? 'http://localhost:3000/api'
-    : 'https://sablon-app-production.up.railway.app/api';
+const API_BASE_URL ='https://sablon-app-production.up.railway.app/api';
 
 const user = JSON.parse(localStorage.getItem('user'));
 let currentOwnerStatus = 'pending';
