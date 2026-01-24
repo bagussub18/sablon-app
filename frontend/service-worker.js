@@ -1,16 +1,16 @@
 const CACHE_NAME = 'sablon-cache-v1';
 
 const STATIC_ASSETS = [
-  '/',
-  '/index.html',
-  '/login.html',
-  '/profil.html',
-  '/pesan.html',
-  '/daftar.html',
-  '/produk.html',
-  '/css/style.css',
-  '/js/script.js',
-  '/js/sw-register.js'
+  '/frontend/',
+  '/frontend/index.html',
+  '/frontend/login.html',
+  '/frontend/profil.html',
+  '/frontend/pesan.html',
+  '/frontend/daftar.html',
+  '/frontend/produk.html',
+  '/frontend/css/style.css',
+  '/frontend/js/script.js',
+  '/frontend/js/sw-register.js'
 ];
 
 // INSTALL
