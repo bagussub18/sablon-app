@@ -1,16 +1,16 @@
 const CACHE_NAME = 'sablon-cache-v1';
 
 const STATIC_ASSETS = [
-  '/frontend/',
-  '/frontend/index.html',
-  '/frontend/login.html',
-  '/frontend/profil.html',
-  '/frontend/pesan.html',
-  '/frontend/daftar.html',
-  '/frontend/produk.html',
-  '/frontend/css/style.css',
-  '/frontend/js/script.js',
-  '/frontend/js/sw-register.js'
+  '/',
+  '/index.html',
+  '/login.html',
+  '/profil.html',
+  '/pesan.html',
+  '/daftar.html',
+  '/produk.html',
+  '/css/style.css',
+  '/js/script.js',
+  '/js/sw-register.js'
 ];
 
 // INSTALL
@@ -36,7 +36,7 @@ self.addEventListener('fetch', event => {
       return response || fetch(event.request).catch(() => {
         // fallback jika offline & buka halaman
         if (event.request.mode === 'navigate') {
-          return caches.match('/frontend/index.html');
+          return caches.match('/index.html');
         }
       });
     })
