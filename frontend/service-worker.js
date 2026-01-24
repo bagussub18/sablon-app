@@ -1,5 +1,7 @@
-const CACHE_NAME = 'sablon-v2';
+const CACHE_NAME = 'sablon-pro-v1';
+const IMG_CACHE = 'sablon-images-v1';
 
+// Daftar file inti yang WAJIB ada agar aplikasi bisa terbuka
 const STATIC_ASSETS = [
   '/',
   '/index.html',
@@ -11,49 +13,70 @@ const STATIC_ASSETS = [
   '/css/style.css',
   '/js/script.js',
   '/js/sw-register.js',
-  '/icons/logo-sablon.png' // Pastikan nama file lengkap
+  '/icons/logo-sablon.png' // Pastikan nama file sesuai
 ];
 
-// INSTALL
+// 1. INSTALL: Menyimpan file inti ke cache
 self.addEventListener('install', event => {
   self.skipWaiting();
   event.waitUntil(
     caches.open(CACHE_NAME).then(cache => {
-      // Menggunakan addAll untuk file statis utama
+      console.log('Caching static assets...');
       return cache.addAll(STATIC_ASSETS);
     })
   );
 });
 
-// ACTIVATE
+// 2. ACTIVATE: Menghapus cache versi lama
 self.addEventListener('activate', event => {
   event.waitUntil(
-    caches.keys().then(keys =>
-      Promise.all(keys.filter(k => k !== CACHE_NAME).map(k => caches.delete(k)))
-    )
+    caches.keys().then(keys => {
+      return Promise.all(
+        keys.filter(key => key !== CACHE_NAME && key !== IMG_CACHE)
+            .map(key => caches.delete(key))
+      );
+    })
   );
   return self.clients.claim();
 });
 
-// FETCH (Strategi agar Gambar terload otomatis saat offline)
+// 3. FETCH: Logika pintar untuk Offline
 self.addEventListener('fetch', event => {
-  event.respondWith(
-    caches.match(event.request).then(response => {
-      // 1. Jika ada di cache (termasuk gambar yang pernah dibuka), ambil dari cache
-      if (response) return response;
+  const url = new URL(event.request.url);
 
-      // 2. Jika tidak ada, ambil dari internet (Network)
-      return fetch(event.request).then(fetchRes => {
-        // Simpan otomatis gambar dari folder resources ke cache saat user membukanya (Online)
-        if (event.request.url.includes('/resources/')) {
-          return caches.open(CACHE_NAME).then(cache => {
-            cache.put(event.request.url, fetchRes.clone());
-            return fetchRes;
+  // STRATEGI UNTUK GAMBAR (Folder resources & resources/produk)
+  if (event.request.destination === 'image' || url.pathname.includes('/resources/')) {
+    event.respondWith(
+      caches.open(IMG_CACHE).then(cache => {
+        return cache.match(event.request).then(response => {
+          // Ambil dari cache jika ada, jika tidak ada fetch dari network lalu simpan
+          return response || fetch(event.request).then(newRes => {
+            cache.put(event.request, newRes.clone());
+            return newRes;
           });
-        }
-        return fetchRes;
+        });
+      })
+    );
+    return;
+  }
+
+  // STRATEGI UNTUK HALAMAN HTML & FILE LAINNYA
+  event.respondWith(
+    caches.match(event.request).then(cachedResponse => {
+      // Jika file (misal profil.html) ditemukan di cache, tampilkan langsung
+      if (cachedResponse) {
+        return cachedResponse;
+      }
+
+      // Jika tidak ada di cache, ambil dari internet
+      return fetch(event.request).then(networkResponse => {
+        // Simpan file baru tersebut ke cache secara otomatis
+        return caches.open(CACHE_NAME).then(cache => {
+          cache.put(event.request, networkResponse.clone());
+          return networkResponse;
+        });
       }).catch(() => {
-        // 3. Fallback jika Offline total & navigasi halaman
+        // JIKA OFFLINE TOTAL dan file tidak ada di cache
         if (event.request.mode === 'navigate') {
           return caches.match('/index.html');
         }
