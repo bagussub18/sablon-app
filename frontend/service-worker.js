@@ -1,7 +1,6 @@
-const CACHE_NAME = 'sablon-pro-v1';
+const CACHE_NAME = 'sablon-pro-v2'; // NAIKKAN VERSI KE V2
 const IMG_CACHE = 'sablon-images-v1';
 
-// Daftar file inti yang WAJIB ada agar aplikasi bisa terbuka
 const STATIC_ASSETS = [
   '/',
   '/index.html',
@@ -13,21 +12,16 @@ const STATIC_ASSETS = [
   '/css/style.css',
   '/js/script.js',
   '/js/sw-register.js',
-  '/icons/logo-sablon.png' // Pastikan nama file sesuai
+  '/icons/logo-sablon.png'
 ];
 
-// 1. INSTALL: Menyimpan file inti ke cache
 self.addEventListener('install', event => {
   self.skipWaiting();
   event.waitUntil(
-    caches.open(CACHE_NAME).then(cache => {
-      console.log('Caching static assets...');
-      return cache.addAll(STATIC_ASSETS);
-    })
+    caches.open(CACHE_NAME).then(cache => cache.addAll(STATIC_ASSETS))
   );
 });
 
-// 2. ACTIVATE: Menghapus cache versi lama
 self.addEventListener('activate', event => {
   event.waitUntil(
     caches.keys().then(keys => {
@@ -40,16 +34,22 @@ self.addEventListener('activate', event => {
   return self.clients.claim();
 });
 
-// 3. FETCH: Logika pintar untuk Offline
 self.addEventListener('fetch', event => {
   const url = new URL(event.request.url);
 
-  // STRATEGI UNTUK GAMBAR (Folder resources & resources/produk)
+  // --- TAMBAHAN BARU: JANGAN CACHE DATA DARI RAILWAY ---
+  // Jika request menuju ke domain railway atau mengandung kata 'api'
+  if (url.origin.includes('railway.app') || url.pathname.includes('/api/')) {
+    return event.respondWith(fetch(event.request)); 
+    // Menggunakan fetch langsung tanpa cek cache agar data selalu baru
+  }
+  // ----------------------------------------------------
+
+  // STRATEGI UNTUK GAMBAR
   if (event.request.destination === 'image' || url.pathname.includes('/resources/')) {
     event.respondWith(
       caches.open(IMG_CACHE).then(cache => {
         return cache.match(event.request).then(response => {
-          // Ambil dari cache jika ada, jika tidak ada fetch dari network lalu simpan
           return response || fetch(event.request).then(newRes => {
             cache.put(event.request, newRes.clone());
             return newRes;
@@ -60,23 +60,21 @@ self.addEventListener('fetch', event => {
     return;
   }
 
-  // STRATEGI UNTUK HALAMAN HTML & FILE LAINNYA
+  // STRATEGI UNTUK HALAMAN STATIS
   event.respondWith(
     caches.match(event.request).then(cachedResponse => {
-      // Jika file (misal profil.html) ditemukan di cache, tampilkan langsung
-      if (cachedResponse) {
-        return cachedResponse;
-      }
+      if (cachedResponse) return cachedResponse;
 
-      // Jika tidak ada di cache, ambil dari internet
       return fetch(event.request).then(networkResponse => {
-        // Simpan file baru tersebut ke cache secara otomatis
-        return caches.open(CACHE_NAME).then(cache => {
-          cache.put(event.request, networkResponse.clone());
-          return networkResponse;
-        });
+        // Hanya simpan ke cache jika request berhasil dan bukan data dinamis
+        if(networkResponse.status === 200) {
+          return caches.open(CACHE_NAME).then(cache => {
+            cache.put(event.request, networkResponse.clone());
+            return networkResponse;
+          });
+        }
+        return networkResponse;
       }).catch(() => {
-        // JIKA OFFLINE TOTAL dan file tidak ada di cache
         if (event.request.mode === 'navigate') {
           return caches.match('/index.html');
         }

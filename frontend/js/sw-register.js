@@ -3,10 +3,22 @@ if ('serviceWorker' in navigator) {
     navigator.serviceWorker
       .register('/service-worker.js')
       .then(reg => {
-        console.log('SW Berhasil Terdaftar. Scope:', reg.scope);
+        console.log('SW Registered');
+        
+        // Cek jika ada update kode PWA
+        reg.onupdatefound = () => {
+          const installingWorker = reg.installing;
+          installingWorker.onstatechange = () => {
+            if (installingWorker.state === 'installed') {
+              if (navigator.serviceWorker.controller) {
+                // Notifikasi bahwa ada versi baru, sarankan refresh
+                alert('Aplikasi diperbarui! Silakan refresh halaman.');
+                window.location.reload();
+              }
+            }
+          };
+        };
       })
-      .catch(err => {
-        console.error('SW Gagal Terdaftar:', err);
-      });
+      .catch(err => console.error('SW Failed', err));
   });
 }
