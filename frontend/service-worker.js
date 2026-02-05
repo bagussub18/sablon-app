@@ -1,4 +1,4 @@
-const CACHE_NAME = 'sablon-pro-v3'; // Naikkan ke V3
+const CACHE_NAME = 'sablon-pro-v4'; // Naikkan ke V3
 const IMG_CACHE = 'sablon-images-v1';
 const DATA_CACHE = 'sablon-data-v1'; // Cache khusus untuk data database/API
 
@@ -39,7 +39,10 @@ self.addEventListener('activate', event => {
 
 // 3. FETCH
 self.addEventListener('fetch', event => {
-  const url = new URL(event.request.url);
+  // --- TAMBAHAN: ABAIKAN SEMUA REQUEST BUKAN GET (SEPERTI POST) ---
+  if (event.request.method !== 'GET') {
+    return; // Biarkan request POST/PUT/DELETE langsung ke network
+  }
 
   // --- STRATEGI DATA RAILWAY (DATABASE) ---
   // Agar data bisa dilihat offline tapi selalu update saat online
