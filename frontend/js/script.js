@@ -283,11 +283,9 @@ async function loadPesananOwner(status = '') {
         <td>${p.jenis_barang}</td>
         <td>
           <a href=${p.desain} target="_blank">Desain</a>
-          <a href=${p.desain} download=${p.nama_pelanggan}>Download</a>
         </td>
         <td>
           <a href=${p.bukti_pembayaran} target="_blank">Bukti</a>
-          <a href=${p.bukti_pembayaran} download=${p.nama_pelanggan}>Download</a>
         </td>
         <td>Rp ${p.total_harga}</td>
         <td>${new Date(p.created_at).toLocaleString('id-ID')}</td>
